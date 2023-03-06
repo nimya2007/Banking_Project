@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: csark-banking-deploy
+  labels:
+    app: csark-banking-deploy
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: csark-banking-deploy
+  template:
+    metadata:
+      labels:
+        app: csark-banking-deploy
+    spec:
+      containers:
+      - name: csark-banking-container
+        image: csark/banking-app
+        ports:
+        - containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: csark-banking-np-service
+  labels:
+    app: csark-banking-deploy
+spec:
+  selector:
+    app: csark-banking-deploy
+
+  type: NodePort
+  ports:
+  - nodePort: 31300
+    port: 8080
+    targetPort: 8080
